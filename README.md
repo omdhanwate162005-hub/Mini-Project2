@@ -1,87 +1,118 @@
-anymatch [![Build Status](https://travis-ci.org/micromatch/anymatch.svg?branch=master)](https://travis-ci.org/micromatch/anymatch) [![Coverage Status](https://img.shields.io/coveralls/micromatch/anymatch.svg?branch=master)](https://coveralls.io/r/micromatch/anymatch?branch=master)
-======
-Javascript module to match a string against a regular expression, glob, string,
-or function that takes the string as an argument and returns a truthy or falsy
-value. The matcher can also be an array of any or all of these. Useful for
-allowing a very flexible user-defined config to define things like file paths.
+📘 Employee Management System (EMS)
+🔷 Project Description
 
-__Note: This module has Bash-parity, please be aware that Windows-style backslashes are not supported as separators. See https://github.com/micromatch/micromatch#backslashes for more information.__
+The Employee Management System (EMS) is a full-stack web application designed to manage employee records efficiently. It allows administrators to perform CRUD operations (Create, Read, Update, Delete) on employee data with a secure authentication system.
 
+🚀 Tech Stack
+🔹 Frontend
+HTML5
+CSS3
+JavaScript
+React.js
+Bootstrap / Tailwind CSS
+🔹 Backend
+Node.js
+Express.js
+🔹 Database
+MySQL
+🔹 Other Tools
+JWT (Authentication)
+bcrypt (Password Hashing)
+Axios (API Calls)
+✨ Features
+🔐 User Authentication (Login/Logout)
+👨‍💼 Add Employee
+📋 View Employees
+✏️ Update Employee Details
+❌ Delete Employee
+🔍 Search & Filter Employees
+📊 Dashboard Statistics
+📱 Responsive Design
+📂 Project Structure
+EMS-Project/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+├── backend/
+│   ├── routes/
+│   ├── controllers/
+│   ├── models/
+│   ├── config/
+│   └── package.json
+│
+├── database/
+│   └── ems.sql
+│
+└── README.md
+⚙️ Installation & Setup
+🔹 Step 1: Clone Repository
+git clone https://github.com/your-username/ems-project.git
+cd ems-project
+🔹 Step 2: Setup Backend
+cd backend
+npm install
 
-Usage
------
-```sh
-npm install anymatch
-```
+Create .env file in backend:
 
-#### anymatch(matchers, testString, [returnIndex], [options])
-* __matchers__: (_Array|String|RegExp|Function_)
-String to be directly matched, string with glob patterns, regular expression
-test, function that takes the testString as an argument and returns a truthy
-value if it should be matched, or an array of any number and mix of these types.
-* __testString__: (_String|Array_) The string to test against the matchers. If
-passed as an array, the first element of the array will be used as the
-`testString` for non-function matchers, while the entire array will be applied
-as the arguments for function matchers.
-* __options__: (_Object_ [optional]_) Any of the [picomatch](https://github.com/micromatch/picomatch#options) options.
-    * __returnIndex__: (_Boolean [optional]_) If true, return the array index of
-the first matcher that that testString matched, or -1 if no match, instead of a
-boolean result.
+PORT=5000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=ems
+JWT_SECRET=your_secret_key
 
-```js
-const anymatch = require('anymatch');
+Run backend:
 
-const matchers = [ 'path/to/file.js', 'path/anyjs/**/*.js', /foo.js$/, string => string.includes('bar') && string.length > 10 ] ;
+npm start
+🔹 Step 3: Setup Frontend
+cd frontend
+npm install
+npm start
+🔹 Step 4: Setup Database
 
-anymatch(matchers, 'path/to/file.js'); // true
-anymatch(matchers, 'path/anyjs/baz.js'); // true
-anymatch(matchers, 'path/to/foo.js'); // true
-anymatch(matchers, 'path/to/bar.js'); // true
-anymatch(matchers, 'bar.js'); // false
+Open MySQL and run:
 
-// returnIndex = true
-anymatch(matchers, 'foo.js', {returnIndex: true}); // 2
-anymatch(matchers, 'path/anyjs/foo.js', {returnIndex: true}); // 1
+CREATE DATABASE ems;
+USE ems;
 
-// any picomatc
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50),
+    password VARCHAR(255)
+);
 
-// using globs to match directories and their children
-anymatch('node_modules', 'node_modules'); // true
-anymatch('node_modules', 'node_modules/somelib/index.js'); // false
-anymatch('node_modules/**', 'node_modules/somelib/index.js'); // true
-anymatch('node_modules/**', '/absolute/path/to/node_modules/somelib/index.js'); // false
-anymatch('**/node_modules/**', '/absolute/path/to/node_modules/somelib/index.js'); // true
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    department VARCHAR(100),
+    salary DOUBLE,
+    phone VARCHAR(15)
+);
+🔑 Default Login
+Username: admin
+Password: admin123
 
-const matcher = anymatch(matchers);
-['foo.js', 'bar.js'].filter(matcher);  // [ 'foo.js' ]
-anymatch master* ❯
+(Make sure to insert this user manually with hashed password or update code accordingly)
 
-```
-
-#### anymatch(matchers)
-You can also pass in only your matcher(s) to get a curried function that has
-already been bound to the provided matching criteria. This can be used as an
-`Array#filter` callback.
-
-```js
-var matcher = anymatch(matchers);
-
-matcher('path/to/file.js'); // true
-matcher('path/anyjs/baz.js', true); // 1
-
-['foo.js', 'bar.js'].filter(matcher); // ['foo.js']
-```
-
-Changelog
-----------
-[See release notes page on GitHub](https://github.com/micromatch/anymatch/releases)
-
-- **v3.0:** Removed `startIndex` and `endIndex` arguments. Node 8.x-only.
-- **v2.0:** [micromatch](https://github.com/jonschlinkert/micromatch) moves away from minimatch-parity and inline with Bash. This includes handling backslashes differently (see https://github.com/micromatch/micromatch#backslashes for more information).
-- **v1.2:** anymatch uses [micromatch](https://github.com/jonschlinkert/micromatch)
-for glob pattern matching. Issues with glob pattern matching should be
-reported directly to the [micromatch issue tracker](https://github.com/jonschlinkert/micromatch/issues).
-
-License
--------
-[ISC](https://raw.github.com/micromatch/anymatch/master/LICENSE)
+📡 API Endpoints
+Method	Endpoint	Description
+POST	/api/login	User login
+GET	/api/employees	Get all employees
+POST	/api/employees	Add employee
+PUT	/api/employees/:id	Update employee
+DELETE	/api/employees/:id	Delete employee
+🛠️ Future Enhancements
+Role-based access control
+Export data (PDF/Excel)
+Profile images upload
+Email notifications
+Advanced analytics dashboard
+🧠 Learning Outcomes
+Understanding of full-stack development
+Working with REST APIs
+Database integration with MySQL
+Authentication using JWT
+CRUD operations
